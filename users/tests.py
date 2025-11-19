@@ -58,7 +58,7 @@ class RegistrationTestCase(TestCase):
 
     def test_unique_username(self):
         user = User.objects.create(username="muzaffar", first_name="muzaffar")
-        user.set_password("somepass")
+        user.set_password("anypassword")
         user.save()
 
         response = self.client.post(
@@ -76,11 +76,10 @@ class RegistrationTestCase(TestCase):
         self.assertEqual(user_count, 1)
         self.assertFormError(response, "form", "username", "A user with that username already exists.")
 
-
 class LoginTestCase(TestCase):
     def test_successful_login(self):
         db_user = User.objects.create_user(username="muzaffar", firstname="muzaffar")
-        db_user.set_password("somepassword")
+        db_user.set_password("anypassword")
         db_user.save()
 
         self.client.post(
@@ -96,7 +95,7 @@ class LoginTestCase(TestCase):
 
     def test_wrong_credentials(self):
         db_user = User.objects.create_user(username="muzaffar", firstname="muzaffar")
-        db_user.set_password("somepassword")
+        db_user.set_password("anypassword")
         db_user.save()
 
         self.client.post(
@@ -120,3 +119,30 @@ class LoginTestCase(TestCase):
 
         user = get_user(self.client)
         self.assertFalse(user.is_authenticated)
+
+class ProfileTestCase(TestCase):
+    def test_login_required(self):
+        response = self.client.get(reverse("profile"))
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, reverse("login") + "?next=/users/profile/")
+
+    def test_profile_details(self):
+        user = User.objects.create(
+            username="muzaffar",
+            first_name="muzaffar",
+            last_name="joraboyev",
+            email="muzaffar@mail.com",
+        )
+        user.set_password("anypassword")
+        user.save()
+
+        self.client.login(username="muzaffar", password="anypassword")
+
+        response = self.client.get(reverse("profile"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, user.username)
+        self.assertContains(response, user.first_name)
+        self.assertContains(response, user.last_name)
+        self.assertContains(response, user.email)

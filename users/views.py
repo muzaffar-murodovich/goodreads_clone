@@ -40,3 +40,7 @@ class LoginView(View):
             return redirect('landing_page')
         else:
             return render(request,'users/login.html', context={'login_form': login_form})
+
+class ProfileView(LoginReuiredMixin, View):
+    def get(self, request):
+        return render(request, 'users/profile.html', {'user': request.user})
