@@ -1,13 +1,21 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
 {% block content %}
-<h1>Edit Profile Page</h1>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
+    <h3>Edit Profile</h3>
 
-    {{ form.as_p }}
+    <div class="row">
+        <div class="col-4">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
 
-    <button>Save changes</button>
+                {{ form | crispy }}
 
-</form>
+                <button class="btn btn-primary">Save changes</button>
+            </form>
+        </div>
+
+    </div>
+
 
 {% endblock %}

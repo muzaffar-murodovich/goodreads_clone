@@ -1,13 +1,31 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
 
-{% block title %}Book Detail Page{% endblock title %}
+{% block title %}Book Detail Page{% endblock %}
 
 {% block content %}
-<h3>{{ book.title }}</h3>
+    <div class="row mb-4">
+        <div class="col-2">
+            <img class="cover-pic" alt="cover image" src="{{ book.cover_picture.url }}">
+        </div>
 
-<img class="cover-pic" src="{{ book.cover_picture.url }}" alt="cover image">
+        <div class="col-6 ms-3">
+            <h3>{{ book.title }}</h3>
 
-<h5>
-    {{ book.description }}
-</h5>
+            <span class="fst-italic">
+                Authored by
+                {% for book_author in book.bookauthor_set.all %}
+                    {% if forloop.last %}
+                        {{ book_author.author.full_name }}
+                    {% else %}
+                        {{ book_author.author.full_name }},
+                    {% endif %}
+                {% endfor %}
+            </span>
+
+            <p>
+                {{ book.description }}
+            </p>
+        </div>
+    </div>
 {% endblock %}
