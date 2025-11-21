@@ -1,18 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Book Detail Page</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-<h1>Book Detail Page</h1>
+{% block title %}Book Detail Page{% endblock title %}
 
+{% block content %}
 <h3>{{ book.title }}</h3>
+
+<img class="cover-pic" src="{{ book.cover_picture.url }}" alt="cover image">
 
 <h5>
     {{ book.description }}
 </h5>
-
-</body>
-</html>
+{% endblock %}

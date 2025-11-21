@@ -29,6 +29,8 @@ ALLOWED_HOSTS = []
 
 LOGIN_URL = '/login/'
 
+AUTH_USER_MODEL = "users.CustomUser"
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -107,7 +109,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+MEDIA_ROOT = BASE_DIR / 'media-files'
 
+MEDIA_URL = '/media-files/'
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
@@ -124,6 +128,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

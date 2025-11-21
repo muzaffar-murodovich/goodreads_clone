@@ -1,9 +1,10 @@
+from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.shortcuts import render, redirect
 from django.views import View
-from users.forms import UserCreateForm
-
+from users.forms import UserCreateForm, UserUpdateForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 class RegisterView(View):
     def get(self, request):
@@ -37,10 +38,37 @@ class LoginView(View):
             user = login_form.get_user()
             login(request, user)
 
-            return redirect('landing_page')
+            messages.success(request, 'You are now logged in')
+
+            return redirect('list')
         else:
             return render(request,'users/login.html', context={'login_form': login_form})
 
-class ProfileView(LoginReuiredMixin, View):
+class ProfileView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, 'users/profile.html', {'user': request.user})
+
+class LogoutView(LoginRequiredMixin, View):
+    def get(self, request):
+        logout(request)
+        messages.info(request, 'You have been logged out.')
+        return redirect('landing_page')
+
+class ProfileUpdateView(LoginRequiredMixin, View):
+    def get(self, request):
+        user_update_form = UserUpdateForm(instance=request.user)
+        return render(request, 'users/profile_edit.html', {'form': user_update_form})
+
+    def post(self, request):
+        user_update_form = UserUpdateForm(
+            data=request.POST,
+            instance=request.user,
+            files=request.FILES
+        )
+
+        if user_update_form.is_valid():
+            user_update_form.save()
+            messages.success(request, 'You have been updated')
+            return redirect('profile')
+        else:
+            return render(request, 'users/profile_edit.html', {'form': user_update_form})

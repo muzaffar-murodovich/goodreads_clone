@@ -1,20 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Profile Page</title>
-</head>
-<body>
-<h1>
-    My Profile
-</h1>
+{% extends "base.html" %}
 
-<p>
-    Username: {{user.username}} <br>
-    First Name: {{user.first_name}} <br>
-    Last Name: {{user.last_name}} <br>
+{% block title %}Profile Page{% endblock %}
 
-</p>
+{% block content %}
+    <h1>Profile page</h1>
 
-</body>
-</html>
+        <img class="profile-pic" alt="Profile picture" src="{{ user.profile_picture.url }}">
+    <div>
+        <a href="{% url 'profile_edit' %}">Edit Profile</a>
+    </div>
+    <p>Username: {{user.username}}</p>
+    <p>First Name: {{user.first_name}}</p>
+    <p>Last Name: {{user.last_name}}</p>
+{% endblock %}

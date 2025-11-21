@@ -1,19 +1,33 @@
 from django.shortcuts import render
 from django.views import View
+from django.views.generic import ListView, DetailView
 
 from books.models import Book
 
-class BooksView(View):
-    def get(self, request):
-        books = Book.objects.all()
-        context = {
-            'books': books
 
-        }
-        return render(request,'books/list.html', context)
+class BooksView(ListView):
+    template_name = 'books/list.html'
+    queryset = Book.objects.all()
+    context_object_name = 'books'
 
-class BookDetailView(View):
-    def get(self, request, id):
-        book = Book.objects.get(id=id)
+# class BooksView(View):
+#     def get(self, request):
+#         books = Book.objects.all()
+#         context = {
+#             'books': books
+#
+#         }
+#         return render(request,'books/list.html', context)
 
-        return render(request, 'books/detail.html', {'book': book})
+class BookDetailView(DetailView):
+    template_name = 'books/detail.html'
+    queryset = Book.objects.all()
+    context_object_name = 'book'
+    pk_url_kwarg = 'id'
+    model = Book
+
+# class BookDetailView(View):
+#     def get(self, request, id):
+#         book = Book.objects.get(id=id)
+#
+#         return render(request, 'books/detail.html', {'book': book})
