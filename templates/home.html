@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}
+Home page
+{% endblock %}
+{% block content %}
+<h3>Home page</h3>
+{% for review in reviews %}
+
+    <p>{{ review.comment }}</p>
+
+{% endfor %}
+{% endblock %}

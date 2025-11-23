@@ -4,10 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-django = "*"
 psycopg2 = "*"
 pillow = "*"
 crispy-bootstrap5 = "*"
+django = "*"
+django-crispy-forms = "*"
 
 [dev-packages]
 
