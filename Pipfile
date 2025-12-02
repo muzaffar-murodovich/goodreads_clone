@@ -12,7 +12,6 @@ celery = "*"
 djangorestframework = "*"
 gunicorn = "*"
 django-environ = "*"
-psycopg2 = "*"
 
 [dev-packages]
 
