@@ -11,6 +11,7 @@ django-crispy-forms = "*"
 celery = "*"
 djangorestframework = "*"
 gunicorn = "*"
+whitenoise = "*"
 django-environ = "*"
 
 [dev-packages]

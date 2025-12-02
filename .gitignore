@@ -15,3 +15,6 @@ Pipfile.lock
 # Editors
 .idea/
 .vscode/
+
+# Media
+media-files/

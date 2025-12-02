@@ -15,7 +15,8 @@ import environ
 from pathlib import Path
 
 env = environ.Env(
-    DEBUG=(bool, False),
+    # set casting, default value
+    DEBUG=(bool, False)
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -29,7 +30,6 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = ['*']
 
@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'books',
     'users',
@@ -60,6 +61,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -142,6 +144,9 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = str(BASE_DIR.joinpath('staticfiles')) # new
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -159,3 +164,5 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 2,
 }
+
+
