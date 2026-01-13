@@ -34,6 +34,7 @@ SECRET_KEY = env('SECRET_KEY')
 ALLOWED_HOSTS = ['*']
 
 LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/books/'
 
 AUTH_USER_MODEL = "users.CustomUser"
 
@@ -153,12 +154,27 @@ STATIC_ROOT = str(BASE_DIR.joinpath('staticfiles')) # new
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+
+EMAIL_HOST = 'smtp.mailersend.net'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
+
+MAILERSEND_API_KEY = env('MAILERSEND_API_KEY', default='')
+MAILERSEND_SMTP_USERNAME = env('MAILERSEND_SMTP_USERNAME', default=env('EMAIL_HOST_USER', default=''))
+
+EMAIL_HOST_USER = MAILERSEND_SMTP_USERNAME
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default=MAILERSEND_API_KEY)
+
+default_from = env('DEFAULT_FROM_EMAIL', default='')
+if not default_from:
+    default_from = MAILERSEND_SMTP_USERNAME if MAILERSEND_SMTP_USERNAME else 'noreply@yourdomain.com'
+DEFAULT_FROM_EMAIL = default_from
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+
+MAILERSEND_SMTP_HOST = 'smtp.mailersend.net'
+MAILERSEND_SMTP_PORT = 587
+
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',

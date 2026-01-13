@@ -13,6 +13,9 @@
                 {{ login_form | crispy }}
 
                 <button class="btn btn-primary">Log in</button>  <span class="ms-3">No account? Then, <a href="{% url 'register' %}">get registered</a></span>
+                <div class="mt-2">
+                    <a href="{% url 'password_reset' %}">Forgot password?</a>
+                </div>
             </form>
         </div>
     </div>

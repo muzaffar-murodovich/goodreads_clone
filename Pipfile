@@ -13,6 +13,7 @@ djangorestframework = "*"
 gunicorn = "*"
 whitenoise = "*"
 django-environ = "*"
+django-mailersend = "*"
 
 [dev-packages]
 

@@ -1,10 +1,15 @@
+import os
+from django.http import JsonResponse
 from django.contrib import messages
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
 from django.contrib.auth import login, logout
 from django.shortcuts import render, redirect
 from django.views import View
+from django.contrib.auth.views import PasswordResetView as DjangoPasswordResetView
+from django.urls import reverse_lazy
 from users.forms import UserCreateForm, UserUpdateForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.mail import EmailMessage, get_connection
 
 class RegisterView(View):
     def get(self, request):
@@ -72,3 +77,15 @@ class ProfileUpdateView(LoginRequiredMixin, View):
             return redirect('profile')
         else:
             return render(request, 'users/profile_edit.html', {'form': user_update_form})
+
+class PasswordResetView(DjangoPasswordResetView):
+    template_name = 'users/password_reset.html'
+    form_class = PasswordResetForm
+    email_template_name = 'users/password_reset_email.html'
+    subject_template_name = 'users/password_reset_subject.txt'
+    success_url = reverse_lazy('password_reset_done')
+    # from_email will automatically use DEFAULT_FROM_EMAIL from settings
+
+    def form_valid(self, form):
+        messages.info(self.request, 'If an account exists with the email you entered, you will receive password reset instructions.')
+        return super().form_valid(form)
