@@ -13,7 +13,7 @@
 }
 
 .cover-pic {
-    width: 220px;
+    width: auto;
     height: 300px;
 }
 
@@ -21,7 +21,7 @@
     margin-top:20px;
 }
 .ui-w-40 {
-    width: 40px !important;
+    width: 40px;
     height: auto;
 }
 .default-style .ui-bordered {

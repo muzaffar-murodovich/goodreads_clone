@@ -4,12 +4,13 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.views import View
 from django.urls import reverse
+from django.db.models import Count
 from books.forms import BookReviewForm
 from books.models import Book, BookReview
 
 class BooksView(View):
     def get(self, request):
-        books = Book.objects.all().order_by('id')
+        books = Book.objects.all().annotate(review_count=Count('bookreview')).order_by('id')
         search_query = request.GET.get('q', None)
         if search_query:
             books = books.filter(title__icontains=search_query)
