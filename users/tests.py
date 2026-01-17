@@ -36,8 +36,10 @@ class RegistrationTestCase(TestCase):
         user_count = CustomUser.objects.count()
 
         self.assertEqual(user_count, 0)
-        self.assertFormError(response, "form", "username", "This field is required.")
-        self.assertFormError(response, "form", "password", "This field is required.")
+        self.assertEqual(response.status_code, 200)
+        form = response.context['form']
+        self.assertIn("username", form.errors)
+        self.assertIn("password", form.errors)
 
     def test_invalid_email(self):
         response = self.client.post(
@@ -54,7 +56,10 @@ class RegistrationTestCase(TestCase):
         user_count = CustomUser.objects.count()
 
         self.assertEqual(user_count, 0)
-        self.assertFormError(response, "form", "email", "Enter a valid email address.")
+        self.assertEqual(response.status_code, 200)
+        form = response.context['form']
+        self.assertIn("email", form.errors)
+        self.assertIn("Enter a valid email address.", str(form.errors['email']))
 
     def test_unique_username(self):
         user = CustomUser.objects.create(username="muzaffar", first_name="muzaffar")
@@ -74,11 +79,14 @@ class RegistrationTestCase(TestCase):
 
         user_count = CustomUser.objects.count()
         self.assertEqual(user_count, 1)
-        self.assertFormError(response, "form", "username", "A user with that username already exists.")
+        self.assertEqual(response.status_code, 200)
+        form = response.context['form']
+        self.assertIn("username", form.errors)
+        self.assertIn("A user with that username already exists.", str(form.errors['username']))
 
 class LoginTestCase(TestCase):
     def setUp(self):
-        self.db_user = CustomUser.objects.create_user(username="muzaffar", firstname="muzaffar")
+        self.db_user = CustomUser.objects.create_user(username="muzaffar", first_name="muzaffar")
         self.db_user.set_password("anypassword")
         self.db_user.save()
 
@@ -132,7 +140,7 @@ class ProfileTestCase(TestCase):
         response = self.client.get(reverse("profile"))
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, reverse("login") + "?next=/users/profile/")
+        self.assertEqual(response.url, reverse("login") + "?next=" + reverse("profile"))
 
     def test_profile_details(self):
         user = CustomUser.objects.create(
@@ -163,7 +171,7 @@ class ProfileTestCase(TestCase):
         self.client.login(username="muzaffar", password="anypassword")
 
         response = self.client.post(
-            reverse("profile-edit"),
+            reverse("profile_edit"),
             data={
                 "username": "muzaffar",
                 "first_name": "muzaffar",
@@ -175,5 +183,6 @@ class ProfileTestCase(TestCase):
         user.refresh_from_db()
 
         self.assertEqual(user.last_name, "kaktus")
-        self.assertEqual(user.email, "muzaffarmurodogli1@gmail.com")
-        self.assertEqual(response.url, reverse("users:profile"))
+        self.assertEqual(user.email, "muzaffarmurodogli@gmail.com")
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, reverse("profile"))
